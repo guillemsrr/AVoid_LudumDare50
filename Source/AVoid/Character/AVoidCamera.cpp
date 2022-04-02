@@ -2,9 +2,17 @@
 
 #include "AVoidCamera.h"
 
+#include "Camera/CameraComponent.h"
+
 AAVoidCamera::AAVoidCamera()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	Root = CreateDefaultSubobject<USceneComponent>("Root");
+	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+
+	RootComponent = Root;
+	FirstPersonCameraComponent->SetupAttachment(RootComponent);
 }
 
 void AAVoidCamera::BeginPlay()

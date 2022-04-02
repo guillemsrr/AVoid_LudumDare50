@@ -1,30 +1,67 @@
-﻿// "// Copyright (c) Guillem Serra. All Rights Reserved."
+﻿// Copyright (c) Guillem Serra. All Rights Reserved.
 
 #include "AVoidCharacter.h"
 
-// Sets default values
+#include "Locomotion.h"
+#include "Mechanics.h"
+
 AAVoidCharacter::AAVoidCharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	Locomotion = CreateDefaultSubobject<ULocomotion>("Locomotion");
+	Mechanics = CreateDefaultSubobject<UMechanics>("Mechanics");
+
+
 }
 
-// Called when the game starts or when spawned
 void AAVoidCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AAVoidCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void AAVoidCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis("MoveVertical", Locomotion, &ULocomotion::MoveVertical).bConsumeInput = false;
+	PlayerInputComponent->BindAxis("MoveHorizontal", Locomotion, &ULocomotion::MoveHorizontal).bConsumeInput = false;
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AAVoidCharacter::Throw);
+	PlayerInputComponent->BindAction("Throw", IE_Released,  this, &AAVoidCharacter::ReleaseThrow);
+	PlayerInputComponent->BindAction("StopThrow", IE_Pressed,  this, &AAVoidCharacter::StopThrow);
+}
+
+void AAVoidCharacter::Throw()
+{
+	if(bHasLight)
+	{
+		Mechanics->StartThrow();
+	}
+	else
+	{
+		Mechanics->Recover();
+	}
+}
+
+void AAVoidCharacter::ReleaseThrow()
+{
+	if(bHasLight)
+	{
+		Mechanics->Throw();
+	}
+}
+
+void AAVoidCharacter::StopThrow()
+{
+	if(bHasLight)
+	{
+		Mechanics->StopThrow();
+	}
 }
 

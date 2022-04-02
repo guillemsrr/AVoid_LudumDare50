@@ -7,7 +7,7 @@
 #include "AVoidPlayerController.generated.h"
 
 UCLASS()
-class AVOID_API UAVoidPlayerController : public UObject
+class AVOID_API AAVoidPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 };

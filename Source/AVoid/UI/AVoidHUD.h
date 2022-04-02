@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
+#include "GameFramework/HUD.h"
 #include "AVoidHUD.generated.h"
 
 UCLASS()
-class AVOID_API UAVoidHUD : public UObject
+class AVOID_API AAVoidHUD : public AHUD
 {
 	GENERATED_BODY()
 };

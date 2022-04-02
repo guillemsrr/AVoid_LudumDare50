@@ -1,4 +1,4 @@
-﻿// "// Copyright (c) Guillem Serra. All Rights Reserved."
+﻿// Copyright (c) Guillem Serra. All Rights Reserved.
 
 #pragma once
 
@@ -19,5 +19,17 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+	UPROPERTY(EditDefaultsOnly)
+	class ULocomotion* Locomotion;
+	UPROPERTY(EditDefaultsOnly)
+	class UMechanics* Mechanics;
+	
 	virtual void BeginPlay() override;
+
+private:
+	bool bHasLight;
+
+	void Throw();
+	void ReleaseThrow();
+	void StopThrow();
 };

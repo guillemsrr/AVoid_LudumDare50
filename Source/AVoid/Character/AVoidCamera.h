@@ -17,5 +17,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+	UPROPERTY()
+	class USceneComponent* Root;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* FirstPersonCameraComponent;
+	
 	virtual void BeginPlay() override;
 };
