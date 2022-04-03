@@ -22,6 +22,8 @@ void UMechanics::Throw()
 
 void UMechanics::Recover()
 {
+	if(!LightActor) return;
+	
 	LightActor->SetTarget(GetOwner()->GetActorLocation() + FVector(CharacterLightOffset, 0, 0));
 }
 

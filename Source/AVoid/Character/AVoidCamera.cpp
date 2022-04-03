@@ -39,7 +39,7 @@ void AAVoidCamera::Tick(float DeltaTime)
 	FVector CharacterLocation = Character->GetActorLocation();
 
 	Location = FMath::VInterpTo(Location,
-	                            FVector(CharacterLocation.X - CharacterOffset, CharacterLocation.Y, CharacterLocation.Z),
+	                            FVector(CharacterLocation.X, CharacterLocation.Y, CharacterLocation.Z) - CharacterOffset,
 	                            DeltaTime,
 	                            MovementSpeed);
 
@@ -52,6 +52,8 @@ void AAVoidCamera::Tick(float DeltaTime)
 		Location-= Direction*FrictionSpeed*DeltaTime;
 	}
 
+	if(FMath::IsNaN(Location.X) || FMath::IsNaN(Location.Z) || FMath::IsNaN(Location.Z)) return;
+	
 	SetActorLocation(Location);
 }
 

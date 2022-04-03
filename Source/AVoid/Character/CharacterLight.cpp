@@ -43,3 +43,8 @@ void ACharacterLight::MoveHorizontal(float Value)
 {
 	Locomotion->MoveHorizontal(Value);
 }
+
+void ACharacterLight::Restart()
+{
+	//InitialPosition
+}

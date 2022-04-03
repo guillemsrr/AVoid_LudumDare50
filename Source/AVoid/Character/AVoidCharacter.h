@@ -15,12 +15,17 @@ public:
 	AAVoidCharacter();
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterDeadSignature);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterRestartSignature);
 
+	UPROPERTY(BlueprintAssignable)
 	FCharacterDeadSignature OnCharacterDeadDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FCharacterRestartSignature OnCharacterRestartDelegate;
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void Restart() override;
+	void RestartCharacter();
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -34,6 +39,7 @@ protected:
 
 private:
 	bool bIsThrowingLight;
+	FVector InitialLocation;
 
 	void StartThrow();
 	void ReleaseThrow();

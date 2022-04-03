@@ -25,6 +25,9 @@ protected:
 	float MovementSpeed = 1.f;
 	
 	UPROPERTY(EditAnywhere)
+	float MaxMovementSpeed = 2.f;
+	
+	UPROPERTY(EditAnywhere)
 	float FrictionRelation = 1.f;
 
 	UPROPERTY(EditAnywhere)
@@ -36,8 +39,8 @@ private:
 
 	FVector ForceVector;
 	FVector MovementVector;
+	FVector InputVector;
 	FVector TargetMovementVector;
 
 	void ApplyMovementFriction();
-	void ApplyGravity();
 };

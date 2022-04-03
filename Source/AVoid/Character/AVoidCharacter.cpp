@@ -8,7 +8,6 @@
 #include "AVoid/Utils/Debug.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
-#include "GenericPlatform/GenericPlatform.h"
 
 AAVoidCharacter::AAVoidCharacter()
 {
@@ -30,6 +29,8 @@ void AAVoidCharacter::BeginPlay()
 
 	Mechanics->SetLight(LightActor);
 	Mechanics->Recover();
+
+	InitialLocation = GetActorLocation();
 }
 
 void AAVoidCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -55,9 +56,11 @@ void AAVoidCharacter::Tick(float DeltaTime)
 	}
 }
 
-void AAVoidCharacter::Restart()
+void AAVoidCharacter::RestartCharacter()
 {
-	Super::Restart();
+	SetActorLocation(InitialLocation);
+	Mechanics->Recover();
+	OnCharacterRestartDelegate.Broadcast();
 }
 
 void AAVoidCharacter::StartThrow()
@@ -100,10 +103,15 @@ void AAVoidCharacter::LightHorizontal(float Value)
 
 void AAVoidCharacter::Die(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if(OtherActor->ActorHasTag(FName("Light"))) return;
+	if(OtherActor == this) return;
+	
 	OnCharacterDeadDelegate.Broadcast();
 }
 
 void AAVoidCharacter::Hit(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if(OtherActor->ActorHasTag(FName("Light"))) return;
+	
 	DEBUG_LOG("HIT");
 }

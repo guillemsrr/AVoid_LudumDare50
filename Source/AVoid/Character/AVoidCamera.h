@@ -31,7 +31,7 @@ protected:
 	float FrictionSpeed = 10.f;
 
 	UPROPERTY(EditAnywhere)
-	float CharacterOffset = 700.f;
+	FVector CharacterOffset;
 	
 	UPROPERTY(EditAnywhere)
 	class AAVoidCharacter* Character;

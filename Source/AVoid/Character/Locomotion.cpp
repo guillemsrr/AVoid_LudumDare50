@@ -25,22 +25,28 @@ void ULocomotion::MoveVertical(float Value)
 {
 	if (Value == 0.0f) return;
 	
-	MovementVector += GetOwner()->GetActorUpVector() * Value*MovementSpeed;
+	InputVector += GetOwner()->GetActorUpVector() * Value;
 }
 
 void ULocomotion::MoveHorizontal(float Value)
 {
 	if (Value == 0.0f) return;
 
-	MovementVector += GetOwner()->GetActorRightVector() * Value*MovementSpeed;
+	InputVector += GetOwner()->GetActorRightVector() * Value;
 }
 
 void ULocomotion::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	InputVector.Normalize();
+	InputVector*=MaxMovementSpeed;
+	MovementVector+=InputVector;
 	ApplyMovementFriction();
-	GetOwner()->SetActorLocation(GetOwner()->GetActorLocation() + MovementVector*DeltaTime);
+	
+	DEBUG_LOG_TICK(MovementVector.ToString());
+	GetOwner()->SetActorLocation(GetOwner()->GetActorLocation() + MovementVector*DeltaTime*MovementSpeed);
+	InputVector = FVector(0);
 }
 
 void ULocomotion::ApplyMovementFriction()
@@ -48,10 +54,5 @@ void ULocomotion::ApplyMovementFriction()
 	FVector Direction = MovementVector;
 	Direction.Normalize();
 	MovementVector -= Direction*(MovementSpeed/FrictionRelation);
-}
-
-void ULocomotion::ApplyGravity()
-{
-	MovementVector-= FVector(0.5*GravityForce, 0, 0);
 }
 

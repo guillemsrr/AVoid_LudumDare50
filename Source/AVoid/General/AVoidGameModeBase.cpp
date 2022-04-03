@@ -55,18 +55,19 @@ void AAVoidGameModeBase::RestartGame()
 {
 	if(!bInGame) return;
 
-	//TODO: improve restart
+	HUD->Hide();
+	LevelDirector->ResetLevelDirector();
 	LevelDirector->Start();
 	Character->EnableInput(PlayerController);
-	Character->Restart();
-	Camera->Restart();
+	Character->RestartCharacter();
+	//Camera->Restart();
+	//CharacterLight->Restart();
 	bInGame = true;
 }
 
 void AAVoidGameModeBase::GameOver()
 {
 	HUD->ShowGameOver();
-	bInGame = false;
 	Character->DisableInput(PlayerController);
 	LevelDirector->Stop();
 }

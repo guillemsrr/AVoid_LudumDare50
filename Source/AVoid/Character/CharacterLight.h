@@ -14,11 +14,13 @@ class AVOID_API ACharacterLight : public AActor
 public:
 	ACharacterLight();
 
+	UFUNCTION(BlueprintCallable)
 	void SetTarget(FVector Location);
 	
 	virtual void Tick(float DeltaTime) override;
 	void MoveVertical(float Value);
 	void MoveHorizontal(float Value);
+	void Restart();
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -32,6 +34,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class ULocomotion* Locomotion;
 
+
 private:
+	FVector InitialPosition;
 	FVector TargetLocation;
 };
