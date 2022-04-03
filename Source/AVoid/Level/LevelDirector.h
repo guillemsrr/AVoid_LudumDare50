@@ -31,7 +31,7 @@ protected:
 	float SpawnTimer;
 	
 	UPROPERTY(EditAnywhere)
-	float SpawnTimerDecreaseInSeconds =0.15f;
+	float SpawnTimerDecreaseInSeconds = 0.1f;
 	
 	UPROPERTY(EditAnywhere)
 	float SpawnPositionOffset;

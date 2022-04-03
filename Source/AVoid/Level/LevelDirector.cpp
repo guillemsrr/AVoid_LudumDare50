@@ -80,20 +80,17 @@ void ALevelDirector::SpawnWell()
 void ALevelDirector::SpawnObstacle()
 {
 	SpawnTimer-= SpawnTimerDecreaseInSeconds;
+	if(SpawnTimer < 2.f)
+	{
+		//WIN STATE ?  XD
+		SpawnTimer = 2.f;
+	}
 
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ALevelDirector::SpawnObstacle, SpawnTimer);
 
 	AActor* Obstacle = ObstacleSpawner->SpawnObstacle();
 	Obstacle->AttachToComponent(Root, FAttachmentTransformRules::KeepWorldTransform);
 	Obstacles.Add(Obstacle);
-
-	
-	/*if(ObstacleSpawnCounter > 2)
-	{
-		ObstacleSpawnCounter = 0;
-		
-	}
-	ObstacleSpawnCounter++;*/
 }
 
 void ALevelDirector::RemoveSpawnHead()
