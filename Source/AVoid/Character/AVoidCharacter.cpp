@@ -2,28 +2,34 @@
 
 #include "AVoidCharacter.h"
 
+#include "CharacterLight.h"
 #include "Locomotion.h"
 #include "Mechanics.h"
+#include "AVoid/Utils/Debug.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
+#include "GenericPlatform/GenericPlatform.h"
 
 AAVoidCharacter::AAVoidCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	Locomotion = CreateDefaultSubobject<ULocomotion>("Locomotion");
 	Mechanics = CreateDefaultSubobject<UMechanics>("Mechanics");
+	DeathCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("SecondaryCapsuleComponent");
 
-
+	DeathCapsuleComponent->SetupAttachment(RootComponent);
 }
 
 void AAVoidCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-}
 
-void AAVoidCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAVoidCharacter::Hit);
+	DeathCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AAVoidCharacter::Die);
+
+	Mechanics->SetLight(LightActor);
+	Mechanics->Recover();
 }
 
 void AAVoidCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -32,36 +38,72 @@ void AAVoidCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 	PlayerInputComponent->BindAxis("MoveVertical", Locomotion, &ULocomotion::MoveVertical).bConsumeInput = false;
 	PlayerInputComponent->BindAxis("MoveHorizontal", Locomotion, &ULocomotion::MoveHorizontal).bConsumeInput = false;
-	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AAVoidCharacter::Throw);
-	PlayerInputComponent->BindAction("Throw", IE_Released,  this, &AAVoidCharacter::ReleaseThrow);
-	PlayerInputComponent->BindAction("StopThrow", IE_Pressed,  this, &AAVoidCharacter::StopThrow);
+	PlayerInputComponent->BindAxis("LightVertical", this, &AAVoidCharacter::LightVertical).bConsumeInput = false;
+	PlayerInputComponent->BindAxis("LightHorizontal", this, &AAVoidCharacter::LightHorizontal).bConsumeInput = false;
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AAVoidCharacter::StartThrow);
+	PlayerInputComponent->BindAction("Throw", IE_Released, this, &AAVoidCharacter::ReleaseThrow);
+	PlayerInputComponent->BindAction("StopThrow", IE_Pressed, this, &AAVoidCharacter::StopThrow);
 }
 
-void AAVoidCharacter::Throw()
+void AAVoidCharacter::Tick(float DeltaTime)
 {
-	if(bHasLight)
-	{
-		Mechanics->StartThrow();
-	}
-	else
+	Super::Tick(DeltaTime);
+
+	if(bIsThrowingLight)
 	{
 		Mechanics->Recover();
 	}
 }
 
+void AAVoidCharacter::Restart()
+{
+	Super::Restart();
+}
+
+void AAVoidCharacter::StartThrow()
+{
+	bIsThrowingLight = true;
+	Mechanics->Recover();
+}
+
 void AAVoidCharacter::ReleaseThrow()
 {
-	if(bHasLight)
+	if (bIsThrowingLight)
 	{
+		bIsThrowingLight = false;
 		Mechanics->Throw();
 	}
 }
 
 void AAVoidCharacter::StopThrow()
 {
-	if(bHasLight)
+	if (bIsThrowingLight)
 	{
+		bIsThrowingLight = false;
 		Mechanics->StopThrow();
 	}
 }
 
+void AAVoidCharacter::LightVertical(float Value)
+{
+	if (!bIsThrowingLight) return;
+	
+	Mechanics->LightVertical(Value);
+}
+
+void AAVoidCharacter::LightHorizontal(float Value)
+{
+	if (!bIsThrowingLight) return;
+
+	Mechanics->LightHorizontal(Value);
+}
+
+void AAVoidCharacter::Die(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	OnCharacterDeadDelegate.Broadcast();
+}
+
+void AAVoidCharacter::Hit(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	DEBUG_LOG("HIT");
+}

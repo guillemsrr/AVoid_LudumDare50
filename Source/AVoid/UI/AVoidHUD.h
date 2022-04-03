@@ -10,4 +10,14 @@ UCLASS()
 class AVOID_API AAVoidHUD : public AHUD
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ShowMenu();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ShowGameOver();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void Hide();
 };

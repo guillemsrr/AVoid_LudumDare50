@@ -14,8 +14,24 @@ class AVOID_API ACharacterLight : public AActor
 public:
 	ACharacterLight();
 
+	void SetTarget(FVector Location);
+	
 	virtual void Tick(float DeltaTime) override;
+	void MoveVertical(float Value);
+	void MoveHorizontal(float Value);
 
 protected:
+	UPROPERTY(EditAnywhere)
+	float Speed;
+
+	UPROPERTY(EditAnywhere)
+	float FrictionSpeed;
+	
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere)
+	class ULocomotion* Locomotion;
+
+private:
+	FVector TargetLocation;
 };

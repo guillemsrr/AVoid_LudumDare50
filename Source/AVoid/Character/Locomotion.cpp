@@ -5,7 +5,6 @@
 #include "AVoid/Utils/Debug.h"
 
 #include "GameFramework/Character.h"
-#include "GameFramework/PawnMovementComponent.h"
 
 ULocomotion::ULocomotion()
 {
@@ -20,8 +19,6 @@ void ULocomotion::Initialize()
 void ULocomotion::BeginPlay()
 {
 	Super::BeginPlay();
-
-	MovementComponent = Cast<ACharacter>(GetOwner())->GetMovementComponent();
 }
 
 void ULocomotion::MoveVertical(float Value)
@@ -43,10 +40,7 @@ void ULocomotion::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	ApplyMovementFriction();
-	//ApplyGravity(DeltaTime);
-	DEBUG_LOG_TICK(MovementVector.ToString());
 	GetOwner()->SetActorLocation(GetOwner()->GetActorLocation() + MovementVector*DeltaTime);
-	//MovementComponent->AddInputVector(MovementVector);
 }
 
 void ULocomotion::ApplyMovementFriction()

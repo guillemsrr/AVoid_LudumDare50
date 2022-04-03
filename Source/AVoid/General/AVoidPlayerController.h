@@ -10,4 +10,7 @@ UCLASS()
 class AVOID_API AAVoidPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	void Initialize(class AAVoidGameModeBase* GameMode);
 };

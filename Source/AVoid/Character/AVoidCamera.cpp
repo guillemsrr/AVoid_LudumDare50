@@ -1,8 +1,12 @@
 ﻿// Copyright (c) Guillem Serra. All Rights Reserved.
 
 #include "AVoidCamera.h"
+#include "AVoidCharacter.h"
+
+#include "AVoid/Utils/Debug.h"
 
 #include "Camera/CameraComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AAVoidCamera::AAVoidCamera()
 {
@@ -18,11 +22,39 @@ AAVoidCamera::AAVoidCamera()
 void AAVoidCamera::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AAVoidCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	RotationTowardsCharacter =
+		UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Character->GetActorLocation());
+	const FRotator Rotation = FMath::RInterpTo(GetActorRotation(), RotationTowardsCharacter, DeltaTime, RotationSpeed);
+
+	SetActorRotation(Rotation);
+
+	FVector Location = GetActorLocation();
+
+	FVector CharacterLocation = Character->GetActorLocation();
+
+	Location = FMath::VInterpTo(Location,
+	                            FVector(CharacterLocation.X - CharacterOffset, CharacterLocation.Y, CharacterLocation.Z),
+	                            DeltaTime,
+	                            MovementSpeed);
+
+	float Distance = FVector2D::Distance(FVector2D(Location.Y, Location.Z), FVector2D());
+	if ( Distance > MaxDistance)
+	{
+		FVector Direction = FVector(0, Location.Y, Location.Z);
+		Direction.Normalize();
+		DEBUG_LOG_TICK("Setting location");
+		Location-= Direction*FrictionSpeed*DeltaTime;
+	}
+
+	SetActorLocation(Location);
 }
 
+void AAVoidCamera::Restart()
+{
+}

@@ -37,9 +37,6 @@ private:
 	FVector ForceVector;
 	FVector MovementVector;
 	FVector TargetMovementVector;
-	
-	UPROPERTY()
-	class UPawnMovementComponent* MovementComponent;
 
 	void ApplyMovementFriction();
 	void ApplyGravity();

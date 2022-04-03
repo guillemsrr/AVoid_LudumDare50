@@ -15,8 +15,27 @@ public:
 	AAVoidCamera();
 
 	virtual void Tick(float DeltaTime) override;
+	void Restart();
 
 protected:
+	UPROPERTY(EditAnywhere)
+	float RotationSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float MovementSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float MaxDistance = 700.f;
+
+	UPROPERTY(EditAnywhere)
+	float FrictionSpeed = 10.f;
+
+	UPROPERTY(EditAnywhere)
+	float CharacterOffset = 700.f;
+	
+	UPROPERTY(EditAnywhere)
+	class AAVoidCharacter* Character;
+	
 	UPROPERTY()
 	class USceneComponent* Root;
 	
@@ -24,4 +43,7 @@ protected:
 	class UCameraComponent* FirstPersonCameraComponent;
 	
 	virtual void BeginPlay() override;
+
+private:
+	FRotator RotationTowardsCharacter;
 };
