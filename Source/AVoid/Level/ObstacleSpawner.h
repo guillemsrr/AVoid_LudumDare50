@@ -14,10 +14,21 @@ class AVOID_API UObstacleSpawner : public UActorComponent
 public:
 	UObstacleSpawner();
 
+	int DifficultyCounter;
+
+	AActor* SpawnObstacle();
+	
 protected:
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<AActor>> EasyObstacle;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<AActor>> MediumObstacle;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<AActor>> HardObstacle;
+	
 	virtual void BeginPlay() override;
 
-public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+private:
+	TSubclassOf<AActor> GetRandomActorFromArray(TArray<TSubclassOf<AActor>> Actors);
+
 };

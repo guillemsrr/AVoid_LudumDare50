@@ -18,6 +18,7 @@ public:
 
 	void Start();
 	void Stop();
+	void ResetLevelDirector();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -28,12 +29,13 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float SpawnTimer;
-
+	
+	UPROPERTY(EditAnywhere)
+	float SpawnTimerDecreaseInSeconds =0.15f;
+	
 	UPROPERTY(EditAnywhere)
 	float SpawnPositionOffset;
-
-	float Test;
-
+	
 	UPROPERTY(EditAnywhere)
 	float Gravity;
 
@@ -42,13 +44,26 @@ protected:
 	
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+	class UObstacleSpawner* ObstacleSpawner;
+
 private:
 	FVector InitialLocation;
 	FVector Location;
 	FActorSpawnParameters SpawnParameters;
 	FTimerHandle TimerHandle;
-	TQueue<AActor*> Spawns;
+	TArray<AActor*> Spawns;
+	TArray<AActor*> Obstacles;
 
+	int ObstacleSpawnCounter;
+	float InitialSpawnTimer;
+	
 	UFUNCTION()
 	void SpawnWell();
+	UFUNCTION()
+	void SpawnObstacle();
+
+	void RemoveSpawnHead();
+
+	void AddAlreadySpawnedActors();
 };
